@@ -12,7 +12,7 @@ public class GhostServerImpl extends GhostServerPOA {
 	
 	// Construtor
 	public GhostServerImpl() {
-		listener = null;		
+		listener = null;
 	}
 	
 	@Override
