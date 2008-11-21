@@ -1,17 +1,12 @@
 module comm {
 
 
-  interface GhostListener {
-
-    void worldInfo(out string matrix);
-    void pacManInfo(out short x, out short y);
-
-  };
-
   interface GhostServer {
 
-    void register(in GhostListener listener);
-    boolean ghostInfo(in short id, out short x, out short y);
+    short ghostInfo(in short id, out short x, out short y);
+    short worldId();
+    void worldInfo(in string matrix);
+    void pacManInfo(in short x, in short y);
 
   };
 

@@ -8,4 +8,4 @@ rem Executar Cliente:
 rem java cliente –ORBInitialPort 2000 –ORBInitialHost localhost;
 
 echo ORB inicializado...
-orbd -ORBInitialPort 2000
+orbd
