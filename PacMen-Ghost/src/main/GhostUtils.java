@@ -1,4 +1,4 @@
-package comm;
+package main;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
@@ -13,14 +13,17 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 import org.omg.PortableServer.POAPackage.ServantNotActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
 
+import comm.GhostServer;
+import comm.GhostServerHelper;
 import ctl.GhostServerImpl;
+
 
 public class GhostUtils {
 	
 	private static String C_ROOT = "RootPOA"
 				 		,C_NAME_SERVICE = "NameService"
 				 		,C_GHOST_SERVICE = "Ghost";
-	
+
 	public static void initializeServer(GhostServerImpl impl) throws InvalidName, AdapterInactive, ServantNotActive, WrongPolicy, org.omg.CosNaming.NamingContextPackage.InvalidName, NotFound, CannotProceed  {
 		// Cria e inicializa o ORB
 		ORB orb = ORB.init(new String[] {}, null);

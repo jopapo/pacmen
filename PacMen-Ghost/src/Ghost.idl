@@ -5,8 +5,8 @@ module comm {
 
     short ghostInfo(in short id, out short x, out short y);
     short worldId();
-    void worldInfo(in string matrix);
-    void pacManInfo(in short x, in short y);
+    void worldInfo(in short id, in string map, in short width, in short height);
+    void pacManInfo(in short id, in short x, in short y);
 
   };
 
