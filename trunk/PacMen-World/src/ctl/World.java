@@ -24,13 +24,13 @@ public class World extends GameObject {
 
 	private int[][] tabuleiro = new int[50][50];
 	
-	private List<Coordenada> cheatPoints = new ArrayList<Coordenada>();
+	private List<Coordinate> cheatPoints = new ArrayList<Coordinate>();
 	
 	private SpriteGroup groupTabuleiro, groupPacMan, groupGhost;
 
 	private PlayField play;
 	
-	private Coordenada posPacMan, posGhost, posCozinha;
+	private Coordinate posPacMan, posGhost, posCozinha;
 	
 	private GameFont font;
 	
@@ -106,10 +106,10 @@ public class World extends GameObject {
 						tabuleiro[x][y] = 0;
 					}
 					if (nSprite == 4) {
-						posCozinha = new Coordenada(x, y);
+						posCozinha = new Coordinate(x, y);
 					}
 					if (nSprite == 6) {
-						cheatPoints.add(new Coordenada(x, y));
+						cheatPoints.add(new Coordinate(x, y));
 					}
 					groupTabuleiro.add(sprite);
 				}

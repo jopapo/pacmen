@@ -5,32 +5,30 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import utl.ClassIterator;
+
+import main.GhostMain;
+import bo.WorldBO;
+import bo.WorldBO.Movement;
+import busca.AEstrela;
 import busca.Estado;
 import busca.Heuristica;
+import busca.Nodo;
+import erro.EPacMenException;
 
 public class Robo implements Estado, Heuristica {
 
-	/* Enumeração dos movimentos do fantasma */
-	public enum Movimento {
-		ESQUERDA, DIREITA, CIMA, BAIXO
-	};
-
-	/* Coordenada do PacMan */
-	private Coordenada coo;
-
-	/* GhostImpl */
-	//static GhostImpl gi;
-
-	/* Meta que o Fantasma tem que se focar */
-	static Coordenada meta;
+	/* Coordenada do Ghost e da Meta*/
+	private Coordinate coo, meta;
 
 	/**
 	 * Construtor da classe Atribui uma coordenada ao nosso "Robo" Fantasma
 	 * 
 	 * @param coo
 	 */
-	public Robo(Coordenada coo) {
+	public Robo(Coordinate coo, Coordinate meta) {
 		this.coo = coo;
+		this.meta = meta;
 	}
 
 	/**
@@ -76,7 +74,7 @@ public class Robo implements Estado, Heuristica {
 	/**
 	 * @return coordenada
 	 */
-	public Coordenada getCoordenada() {
+	public Coordinate getCoordenada() {
 		return coo;
 	}
 
@@ -98,69 +96,23 @@ public class Robo implements Estado, Heuristica {
 	public List<Estado> sucessores() {
 		List<Estado> suc = new LinkedList<Estado>();
 		Random rd = new Random();
-		ArrayList<Integer> li = new ArrayList<Integer>();
-		li.add(0);
-		li.add(1);
-		li.add(2);
-		li.add(3);
+		ArrayList<Movement> li = new ArrayList<Movement>();
+		li.add(Movement.LEFT);
+		li.add(Movement.RIGHT);
+		li.add(Movement.UP);
+		li.add(Movement.DOWN);
 		Robo m = null;
 		while (li.size() > 0) {
 			int i = rd.nextInt(li.size());
-			switch (li.get(i)) {
-			case 0:
-				m = movePraEsquerda();
-				break;
-			case 1:
-				m = movePraDireita();
-				break;
-			case 2:
-				m = movePraBaixo();
-				break;
-			case 3:
-				m = movePraCima();
-				break;
+			try {
+				m = new Robo(WorldBO.createMovement(coo, li.get(i)), meta);
+			} catch (EPacMenException e) {
 			}
 			if (ehValido(m))
 				suc.add(m);
 			li.remove(i);
 		}
 		return suc;
-	}
-
-	/**
-	 * Move o PacManRobo para Cima
-	 * 
-	 * @return Objeto de Robo, movido para cima
-	 */
-	private Robo movePraCima() {
-		return new Robo(new Coordenada(coo.getX(), coo.getY() - 1));
-	}
-
-	/**
-	 * Move o PacManRobo para Baixo
-	 * 
-	 * @return Objeto de Robo, movido para baixo
-	 */
-	private Robo movePraBaixo() {
-		return new Robo(new Coordenada(coo.getX(), coo.getY() + 1));
-	}
-
-	/**
-	 * Move o PacManRobo para Esquerda
-	 * 
-	 * @return Objeto de Robo, movido para esquerda
-	 */
-	private Robo movePraEsquerda() {
-		return new Robo(new Coordenada(coo.getX() - 1, coo.getY()));
-	}
-
-	/**
-	 * Move o PacManRobo para Direita
-	 * 
-	 * @return Objeto de Robo, movido para direita
-	 */
-	private Robo movePraDireita() {
-		return new Robo(new Coordenada(coo.getX() + 1, coo.getY()));
 	}
 
 	/**
@@ -171,14 +123,18 @@ public class Robo implements Estado, Heuristica {
 	 *         <code> false </code>
 	 */
 	private static boolean ehValido(Robo r) {
-		return false;
-		/*(r != null) && (r.getCoordenada().getX() >= 0)
-				&& (r.getCoordenada().getY() >= 0)
-				&& (r.getCoordenada().getX() < pmc.getWidth())
-				&& (r.getCoordenada().getY() < pmc.getHeight())
-				&& (pmc.estaLivre(r.getCoordenada()));*/
+		try {
+			return (r != null) && (r.getCoordenada().getX() >= 0)
+					&& (r.getCoordenada().getY() >= 0)
+					&& (r.getCoordenada().getX() < getWorld().getWidth())
+					&& (r.getCoordenada().getY() < getWorld().getHeight())
+					&& (getWorld().canActorMoveTo(r.getCoordenada()));
+		} catch (EPacMenException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-
+	
 	public String toString() {
 		return coo.toString();
 	}
@@ -193,43 +149,54 @@ public class Robo implements Estado, Heuristica {
 	 * @param control
 	 * @return
 	 */
-	/*public static Movimento ia(PacManControl control) {
-		pmc = control;
-		// Estado inicial
-		meta = pmc.getPosPacMan();
-		Estado ini = new Robo(pmc.getPosGhost());
-		Nodo fim = new AEstrela().busca(ini);
+	public static Movement ia(Actor actor) {
+		// Para cada PacMen (usuário)
+		ClassIterator ci = GhostMain.getServer().getPacManIterator();
+		while (ci.hasNext()) {
+			PacManVO pac = (PacManVO) ci.next();
+			
+			//System.out.print(actor.toString() + " procurando por " + pac.toString() + "... ");
+		
+			// Estado inicial
+			Estado ini = new Robo(actor.getPos(), pac.getPos());
+			Nodo fim = new AEstrela().busca(ini);
+			
+			//meta = pmc.getPosCozinha();
+			//Nodo cozinha = new AEstrela().busca(ini);
+	
+			//if (pmc.getFome() > fomeMaxima(fim.getProfundidade(), cozinha.getProfundidade()))
+				//fim = cozinha;
+	
+			while ((fim != null) && (fim.getProfundidade() > 1))
+				fim = fim.getPai();
+			
+			if (fim != null) {
+	
+				//System.out.println("Achou em: " + ((Robo) fim.getEstado()).getCoordenada().toString());
 
-		meta = pmc.getPosCozinha();
-		Nodo cozinha = new AEstrela().busca(ini);
-
-		if (pmc.getFome() > fomeMaxima(fim.getProfundidade(), cozinha.getProfundidade()))
-			fim = cozinha;
-
-		while ((fim != null) && (fim.getProfundidade() > 1))
-			fim = fim.getPai();
-
-		if ((fim != null) && (!pmc.estaPausado())) {
-
-			switch (((Robo) fim.getEstado()).getCoordenada().getX()
-					- ((Robo) ini).getCoordenada().getX()) {
-			case -1:
-				return Movimento.ESQUERDA;
-			case 1:
-				return Movimento.DIREITA;
+				switch (((Robo) fim.getEstado()).getCoordenada().getX()
+						- ((Robo) ini).getCoordenada().getX()) {
+				case -1:
+					return Movement.LEFT;
+				case 1:
+					return Movement.RIGHT;
+				}
+	
+				switch (((Robo) fim.getEstado()).getCoordenada().getY()
+						- ((Robo) ini).getCoordenada().getY()) {
+				case -1:
+					return Movement.UP;
+				case 1:
+					return Movement.DOWN;
+				}
 			}
 
-			switch (((Robo) fim.getEstado()).getCoordenada().getY()
-					- ((Robo) ini).getCoordenada().getY()) {
-			case -1:
-				return Movimento.CIMA;
-			case 1:
-				return Movimento.BAIXO;
-			}
+			//System.out.println("Não achou!");
+			
 		}
 
 		return null;
-	}*/
+	}
 
 	/**
 	 * Estimativa de Custo
@@ -240,12 +207,12 @@ public class Robo implements Estado, Heuristica {
 		return getManhatan();
 	}
 
-	private static int fomeMaxima(int dp, int dc) {
+	/*private static int fomeMaxima(int dp, int dc) {
 		return Float.valueOf(450f - 5.311778f * Float.valueOf(dp) + 5.311778f * Float.valueOf(dc)).intValue();
-		/*return Float.valueOf(
-				((2 * dist * dist * dist) / 1305f)
-						+ ((77 * dist * dist) / 145f) + ((-7369 * dist) / 261f)
-						+ (54610 / 87f)).intValue();*/
+	}*/
+	
+	private static WorldBO getWorld() {
+		return GhostMain.getServer().getWorldBO();
 	}
 
 }
