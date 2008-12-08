@@ -104,5 +104,5 @@ public class World {
 	public ClassIterator getIterator(Class c) {
 		return new ClassIterator(actorList, c);
 	}
-	
+
 }

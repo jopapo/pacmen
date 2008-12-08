@@ -53,5 +53,9 @@ public class WorldServerImpl extends PacMen_svcb {
 	public World getWorld() {
 		return world;
 	}
+	
+	public String getMap() {
+		return map.mapa1();
+	}
 
 }
