@@ -1,32 +1,36 @@
-package ctl;
+package br.pacmen.ghost.ctl;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import utl.ClassIterator;
-
-import main.GhostMain;
-import bo.WorldBO;
-import bo.WorldBO.Movement;
+import br.pacmen.ghost.bo.PacManVO;
+import br.pacmen.world.bo.Actor;
+import br.pacmen.world.bo.Coordinate;
+import br.pacmen.world.bo.World;
+import br.pacmen.world.bo.World.Movement;
+import br.pacmen.world.bo.err.EPacMenException;
+import br.pacmen.world.bo.utl.ClassIterator;
 import busca.AEstrela;
 import busca.Estado;
 import busca.Heuristica;
 import busca.Nodo;
-import erro.EPacMenException;
 
 public class Robo implements Estado, Heuristica {
 
 	/* Coordenada do Ghost e da Meta*/
 	private Coordinate coo, meta;
+	
+	private World world;
 
 	/**
 	 * Construtor da classe Atribui uma coordenada ao nosso "Robo" Fantasma
 	 * 
 	 * @param coo
 	 */
-	public Robo(Coordinate coo, Coordinate meta) {
+	public Robo(World world, Coordinate coo, Coordinate meta) {
+		this.world = world;
 		this.coo = coo;
 		this.meta = meta;
 	}
@@ -105,7 +109,7 @@ public class Robo implements Estado, Heuristica {
 		while (li.size() > 0) {
 			int i = rd.nextInt(li.size());
 			try {
-				m = new Robo(WorldBO.createMovement(coo, li.get(i)), meta);
+				m = new Robo(world, World.createMovement(coo, li.get(i)), meta);
 			} catch (EPacMenException e) {
 			}
 			if (ehValido(m))
@@ -126,9 +130,9 @@ public class Robo implements Estado, Heuristica {
 		try {
 			return (r != null) && (r.getCoordenada().getX() >= 0)
 					&& (r.getCoordenada().getY() >= 0)
-					&& (r.getCoordenada().getX() < getWorld().getWidth())
-					&& (r.getCoordenada().getY() < getWorld().getHeight())
-					&& (getWorld().canActorMoveTo(r.getCoordenada()));
+					&& (r.getCoordenada().getX() < r.world.getWidth())
+					&& (r.getCoordenada().getY() < r.world.getHeight())
+					&& (r.world.canActorMoveTo(r.getCoordenada()));
 		} catch (EPacMenException e) {
 			e.printStackTrace();
 			return false;
@@ -151,14 +155,14 @@ public class Robo implements Estado, Heuristica {
 	 */
 	public static Movement ia(Actor actor) {
 		// Para cada PacMen (usuário)
-		ClassIterator ci = GhostMain.getServer().getPacManIterator();
+		ClassIterator ci = actor.getWorld().getIterator(PacManVO.class);
 		while (ci.hasNext()) {
 			PacManVO pac = (PacManVO) ci.next();
 			
 			//System.out.print(actor.toString() + " procurando por " + pac.toString() + "... ");
 		
 			// Estado inicial
-			Estado ini = new Robo(actor.getPos(), pac.getPos());
+			Estado ini = new Robo(actor.getWorld(), actor.getPos(), pac.getPos());
 			Nodo fim = new AEstrela().busca(ini);
 			
 			//meta = pmc.getPosCozinha();
@@ -210,9 +214,5 @@ public class Robo implements Estado, Heuristica {
 	/*private static int fomeMaxima(int dp, int dc) {
 		return Float.valueOf(450f - 5.311778f * Float.valueOf(dp) + 5.311778f * Float.valueOf(dc)).intValue();
 	}*/
-	
-	private static WorldBO getWorld() {
-		return GhostMain.getServer().getWorldBO();
-	}
 
 }

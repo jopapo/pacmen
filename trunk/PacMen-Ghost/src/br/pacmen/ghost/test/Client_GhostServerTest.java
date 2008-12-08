@@ -1,16 +1,16 @@
-package corba;
+package br.pacmen.ghost.test;
 
-import main.GhostUtils;
-import map.Mapa1;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.omg.CORBA.ShortHolder;
 
-import bo.WorldBO;
+import br.pacmen.ghost.corba.comm.GhostServer;
+import br.pacmen.ghost.corba.utl.GhostUtils;
+import br.pacmen.world.bo.model.GenericModel;
+import br.pacmen.world.map.Mapa1;
 
-import comm.GhostServer;
-import ctl.Coordinate;
+
 
 
 public class Client_GhostServerTest {
@@ -31,13 +31,13 @@ public class Client_GhostServerTest {
 	public void testGhostInfo() {
 		
 		for (int i = 0; i < 5; i++) {
-			short id = 0;
+			short id = server.firstGhostInfo();
 			ShortHolder x = new ShortHolder(), y = new ShortHolder();
-			do {
+			while (id != GenericModel.C_INVALID_ID) {
 				System.out.print("Ghost " + id + " pos ");
 				id = server.ghostInfo(id, x, y);
 				System.out.println(x.value + ", " + y.value);
-			} while (id > 0);
+			};
 			
 			try {
 				Thread.sleep(1000);
