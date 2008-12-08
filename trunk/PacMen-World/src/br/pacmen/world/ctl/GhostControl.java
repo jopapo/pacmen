@@ -25,6 +25,10 @@ public class GhostControl extends Thread {
 
 	public GhostClientImpl addGhostServer(String host) throws Exception {
 		GhostClientImpl client = new GhostClientImpl(host);
+		client.worldInfo(worldServerImpl.getWorld().getId(), 
+				worldServerImpl.getMap(), 
+				worldServerImpl.getWorld().getWidth(), 
+				worldServerImpl.getWorld().getHeight());
 		return ghostServerList.put(host, client);
 	}
 
@@ -44,9 +48,11 @@ public class GhostControl extends Thread {
 				while (id != GenericModel.C_INVALID_ID) {
 					short ouid = GhostOuid.encode(worldServerImpl.getWorld().getId(), client.getOuid(), id);
 					GhostVO g = ghostList.get(ouid);
+					if (g == null) {
+						g = new GhostVO(worldServerImpl.getWorld(), id);
+						ghostList.put(ouid, g);
+					}
 					id = client.ghostInfo(id, x, y);
-					if (g == null)
-						g = ghostList.put(ouid, new GhostVO(worldServerImpl.getWorld(), id,  ));
 					Coordinate c = new Coordinate(x.value,y.value);
 					try {
 						g.move(c);

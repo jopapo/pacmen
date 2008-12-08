@@ -35,7 +35,7 @@ public abstract class Actor extends Thread {
 	}
 	
 	public void move(Coordinate pos) throws EPacMenException {
-		if (this.pos.equals(pos))
+		if ((this.pos != null) && (this.pos.equals(pos)))
 			return;
 		if (world.canActorMoveTo(pos)) {
 			this.pos = pos;
