@@ -1,13 +1,16 @@
-package ctl;
+package br.pacmen.ghost.bo;
 
-import bo.WorldBO;
-import bo.WorldBO.Movement;
-import erro.EPacMenException;
+import br.pacmen.ghost.ctl.Robo;
+import br.pacmen.world.bo.Actor;
+import br.pacmen.world.bo.Coordinate;
+import br.pacmen.world.bo.World;
+import br.pacmen.world.bo.World.Movement;
+import br.pacmen.world.bo.err.EPacMenException;
 
 public class Ghost extends Actor {
 
-	public Ghost(WorldBO worldBO) throws EPacMenException {
-		super(worldBO);
+	public Ghost(World world) throws EPacMenException {
+		super(world);
 	}
 
 	private Coordinate preparedMovement = null;
@@ -34,7 +37,7 @@ public class Ghost extends Actor {
 		if (mov == null)
 			return;
 		try {
-			preparedMovement = WorldBO.createMovement(getPos(), mov);
+			preparedMovement = World.createMovement(getPos(), mov);
 		} catch (EPacMenException e) {
 			preparedMovement = null;
 			e.printStackTrace();

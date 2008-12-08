@@ -1,34 +1,59 @@
-package ctl;
+package br.pacmen.ghost.ctl;
 
-import model.GenericModel;
-import model.WorldModel;
 
 import org.omg.CORBA.ShortHolder;
 
-import utl.ClassIterator;
-import bo.WorldBO;
+import br.pacmen.ghost.bo.Ghost;
+import br.pacmen.ghost.bo.PacManVO;
+import br.pacmen.ghost.corba.comm.GhostServerPOA;
+import br.pacmen.world.bo.Coordinate;
+import br.pacmen.world.bo.World;
+import br.pacmen.world.bo.err.EPacMenException;
+import br.pacmen.world.bo.model.GenericModel;
+import br.pacmen.world.bo.model.WorldModel;
+import br.pacmen.world.bo.utl.ClassIterator;
 
-import comm.GhostServerPOA;
 
-import erro.EPacMenException;
 
 public class GhostServerImpl extends GhostServerPOA {
 
-	private final static int C_GHOST_POPULATION = 1;
+	private final static int C_GHOST_POPULATION = 10;
 	
-	private WorldBO worldBO;
+	private World world;
+
+	@Override
+	public short firstGhostInfo() {
+		if (!validateWorld())
+			return GenericModel.C_INVALID_ID;
+
+		ClassIterator ci = world.getIterator(Ghost.class);
+		if ( ci.hasNext() ) {
+			Ghost g = (Ghost) ci.next();
+			return g.getOuid();
+		}
+
+		return GenericModel.C_INVALID_ID;
+	}
+
+	private boolean validateWorld() {
+		if (world == null) {
+			System.out.println("World dont exists yet!");
+			return false;
+		}
+		return true;
+	}
 
 	@Override
 	public short ghostInfo(short id, ShortHolder x, ShortHolder y) {
 		System.out.print("Getting ghost id... ");
-		if (worldBO == null) {
-			System.out.println("World dont exists yet!");
+
+		if (!validateWorld())
 			return GenericModel.C_INVALID_ID;
-		}
-		ClassIterator ci = worldBO.getIterator(Ghost.class);
+
+		ClassIterator ci = world.getIterator(Ghost.class);
 		while ( ci.hasNext() ) {
 			Ghost g = (Ghost) ci.next();
- 			if ((id <= 0) || (id == g.getOuid())) {
+ 			if (id == g.getOuid()) {
  	 			x.value = g.getPos().getX();
  	 			y.value = g.getPos().getY();
  				System.out.print("Sending from " + g.toString());
@@ -40,17 +65,19 @@ public class GhostServerImpl extends GhostServerPOA {
  				System.out.println(" - No next.");
  			}
  		}
-		System.out.println("Ghost: send id finished.");
+		System.out.println("Ghost: id does not exists (" + id + ")");
 		return GenericModel.C_INVALID_ID;
 	}
 
 	@Override
 	public short worldId() {
 		System.out.print("Getting world id... ");
+
+		if (!validateWorld())
+			return GenericModel.C_INVALID_ID;
+
 		try {
-			if (worldBO == null)
-				return GenericModel.C_INVALID_ID;
-			return worldBO.getId();
+			return world.getId();
 		} finally {
 			System.out.println("OK!");
 		}
@@ -59,14 +86,13 @@ public class GhostServerImpl extends GhostServerPOA {
 	@Override
 	public void pacManInfo(short id, short x, short y) {
 		System.out.print("Updating pacman... ");
-		if (worldBO == null) {
-			System.out.println("World dont exists yet!");
+
+		if (!validateWorld())
 			return;
-		}
 
 		Coordinate c = new Coordinate(x, y);
 
-		ClassIterator ci = worldBO.getIterator(PacManVO.class);
+		ClassIterator ci = world.getIterator(PacManVO.class);
 		while (ci.hasNext()) {
 			PacManVO pac = (PacManVO) ci.next();
 			if (pac.getOuid() == id) {
@@ -79,15 +105,15 @@ public class GhostServerImpl extends GhostServerPOA {
 				return;
 			}
 		}
-		new PacManVO(worldBO, id, c);
+		new PacManVO(world, id, c);
 		System.out.println("PacMan created!");
 	}
 
 	@Override
 	public void worldInfo(short id, String map, short width, short height) {
 		System.out.print("Creating world... ");
-		worldBO = new WorldBO(new WorldModel(id, map, width, height));
-		System.out.println("Created with id " + worldBO.getId() + "!");
+		world = new World(new WorldModel(id, map, width, height));
+		System.out.println("Created with id " + world.getId() + "!");
 		
 		// Atualmente a população de fantasmas é fixa por servidor de Ghosts 
 		System.out.print("Populating world with ghosts...");
@@ -95,7 +121,7 @@ public class GhostServerImpl extends GhostServerPOA {
 		// No caso, 10.
 		for (int i = 1; i <= C_GHOST_POPULATION; i++)
 			try {
-				new Ghost(worldBO).start();
+				new Ghost(world).start();
 			} catch (EPacMenException e) {
 				e.printStackTrace();
 			}
@@ -103,12 +129,8 @@ public class GhostServerImpl extends GhostServerPOA {
 		System.out.println("Populated!");
 	}
 
-	public ClassIterator getPacManIterator() {
-		return worldBO.getIterator(PacManVO.class);
-	}
-
-	public WorldBO getWorldBO() {
-		return worldBO;
+	public World getworld() {
+		return world;
 	}
 
 }
