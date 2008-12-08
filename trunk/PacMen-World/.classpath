@@ -2,6 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/arquivo/furb/materias/2008-2/sd/trab-final/PacMen/PacMen-Player/lib/golden_0_2_3.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/PacMen-Ghost-InterfaceCorba"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/PacMen-World-InterfaceRPC"/>
+	<classpathentry kind="lib" path="C:/arquivo/furb/materias/2008-2/sd/trab-final/PacMen/PacMen-World-InterfaceRPC/lib/orpc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

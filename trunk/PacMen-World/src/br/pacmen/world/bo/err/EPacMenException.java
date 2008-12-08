@@ -1,4 +1,4 @@
-package erro;
+package br.pacmen.world.bo.err;
 
 @SuppressWarnings("serial")
 public class EPacMenException extends Exception {

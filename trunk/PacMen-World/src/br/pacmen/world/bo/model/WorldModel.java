@@ -1,10 +1,11 @@
-package model;
+package br.pacmen.world.bo.model;
 
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-import ctl.Coordinate;
-import erro.EPacMenException;
+import br.pacmen.world.bo.Coordinate;
+import br.pacmen.world.bo.err.EPacMenException;
+
 
 public class WorldModel extends GenericModel {
 

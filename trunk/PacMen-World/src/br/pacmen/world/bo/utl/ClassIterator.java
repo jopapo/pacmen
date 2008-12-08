@@ -1,4 +1,4 @@
-package utl;
+package br.pacmen.world.bo.utl;
 
 import java.util.AbstractList;
 import java.util.Iterator;

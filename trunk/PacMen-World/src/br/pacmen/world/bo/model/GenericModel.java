@@ -1,8 +1,8 @@
-package model;
+package br.pacmen.world.bo.model;
 
 public class GenericModel {
 	
-	public static short C_INVALID_ID = -1;
+	public final static int C_INVALID_ID = -1;
 	
 	private short id;
 	

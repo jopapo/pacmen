@@ -1,7 +1,7 @@
-package ctl;
+package br.pacmen.world.bo;
 
-import bo.WorldBO;
-import erro.EPacMenException;
+import br.pacmen.world.bo.err.EPacMenException;
+
 
 public abstract class Actor extends Thread {
 
@@ -9,21 +9,21 @@ public abstract class Actor extends Thread {
 	
 	private Short ouid;
 	private Coordinate pos;
-	private WorldBO worldBO;
+	private World world;
 	
-	public Actor(WorldBO worldBO) throws EPacMenException {
-		this(worldBO, worldBO.getNewOUID());
+	public Actor(World world) throws EPacMenException {
+		this(world, world.getNewOUID());
 	}
 	
-	public Actor(WorldBO worldBO, short id) throws EPacMenException {
-		this(worldBO, id, worldBO.getRandomFreePosition());
+	public Actor(World world, short id) throws EPacMenException {
+		this(world, id, world.getRandomFreePosition());
 	}
 	
-	public Actor(WorldBO worldBO, short id, Coordinate pos) {
-		this.worldBO = worldBO;
+	public Actor(World world, short id, Coordinate pos) {
+		this.world = world;
 		this.ouid = id;
 		this.pos = pos;
-		worldBO.put(this);
+		world.put(this);
 	}
 	
 	public Short getOuid() {
@@ -37,7 +37,7 @@ public abstract class Actor extends Thread {
 	public void move(Coordinate pos) throws EPacMenException {
 		if (this.pos.equals(pos))
 			return;
-		if (worldBO.canActorMoveTo(pos)) {
+		if (world.canActorMoveTo(pos)) {
 			this.pos = pos;
 			System.out.println("Moved: " + toString());
 		} else
@@ -92,12 +92,16 @@ public abstract class Actor extends Thread {
 		}
 	}
 	
-	protected WorldBO getWorldBO() {
-		return this.worldBO;
+	protected World getworld() {
+		return this.world;
 	}
 
 	public String toString() {
-		return this.getClass().getName() +  " " + getOuid() + " in world " + getWorldBO().getId() + " at " + getPos().toString();
+		return this.getClass().getName() +  " " + getOuid() + " in world " + getworld().getId() + " at " + getPos().toString();
+	}
+	
+	public World getWorld() {
+		return this.world;
 	}
 
 	protected abstract void prepare();
