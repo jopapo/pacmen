@@ -1,6 +1,10 @@
-package map;
+package br.pacmen.world.map;
 
 public class Mapa1 {
+	
+	public short getId() {
+		return 1;
+	}
 
 	public String mapa1() {
 		return
@@ -55,4 +59,13 @@ public class Mapa1 {
 		"0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0," +
 		"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,";
 	}
+	
+	public short getHeight() {
+		return 50;
+	}
+	
+	public short getWidth() {
+		return 50;
+	}
+	
 }

@@ -1,17 +1,16 @@
-package bo;
+package br.pacmen.world.bo;
 
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
 
-import model.GenericModel;
-import model.WorldModel;
-import utl.ClassIterator;
-import ctl.Actor;
-import ctl.Coordinate;
-import erro.EPacMenException;
+import br.pacmen.world.bo.err.EPacMenException;
+import br.pacmen.world.bo.model.GenericModel;
+import br.pacmen.world.bo.model.WorldModel;
+import br.pacmen.world.bo.utl.ClassIterator;
 
-public class WorldBO {
+
+public class World {
 	
 	/* Enumeração dos movimentos do fantasma */
 	public static enum Movement {LEFT, RIGHT, UP, DOWN};
@@ -22,7 +21,7 @@ public class WorldBO {
 	
 	private short actorOuidControl = 0;
 	
-	public WorldBO(WorldModel worldModel) {
+	public World(WorldModel worldModel) {
 		this.worldModel = worldModel;		
 	}
 

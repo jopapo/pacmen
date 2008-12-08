@@ -1,4 +1,4 @@
-package ctl;
+package br.pacmen.world.bo;
 
 public class Coordinate {
 	
