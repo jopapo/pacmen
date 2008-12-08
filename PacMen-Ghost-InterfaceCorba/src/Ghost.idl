@@ -1,0 +1,15 @@
+module comm {
+
+
+  interface GhostServer {
+
+    short firstGhostInfo();
+    short ghostInfo(in short id, out short x, out short y);
+    short worldId();
+    void worldInfo(in short id, in string map, in short width, in short height);
+    void pacManInfo(in short id, in short x, in short y);
+
+  };
+
+
+};
