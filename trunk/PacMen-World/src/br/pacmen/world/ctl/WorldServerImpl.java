@@ -1,8 +1,10 @@
 package br.pacmen.world.ctl;
 
+import java.io.IOException;
+
 import br.pacmen.world.bo.World;
 import br.pacmen.world.bo.model.WorldModel;
-import br.pacmen.world.map.Mapa1;
+import br.pacmen.world.bo.utl.MapLoader;
 import br.pacmen.world.rpc.comm.PacMen_svcb;
 import br.pacmen.world.rpc.comm.st_Actor;
 import br.pacmen.world.rpc.comm.st_ActorAndNext;
@@ -13,14 +15,15 @@ import br.pacmen.world.rpc.comm.st_World;
 
 public class WorldServerImpl extends PacMen_svcb {
 	
-	private Mapa1 map;
+	private MapLoader mapLoader;
 	private World world;
 	private GhostControl ghostControl;
 	
-	public WorldServerImpl() {
+	public WorldServerImpl() throws IOException {
 		// Fixo pq é o que deu tempo de fazer
-		map = new Mapa1();
-		world = new World(new WorldModel(map.getId(), map.mapa1(), map.getHeight(), map.getWidth()));
+		mapLoader = new MapLoader();
+		world = new World(new WorldModel(mapLoader.getOuid(), 
+				mapLoader.getMap(), mapLoader.getHeight(), mapLoader.getWidth()));
 		ghostControl = new GhostControl(this);
 		ghostControl.start();
 	}
@@ -46,7 +49,7 @@ public class WorldServerImpl extends PacMen_svcb {
 		wld.id = world.getId();
 		wld.height = world.getHeight();
 		wld.width = world.getWidth();
-		wld.map = map.mapa1(); 
+		wld.map = this.getMap(); 
 		return wld;
 	}
 	
@@ -55,7 +58,7 @@ public class WorldServerImpl extends PacMen_svcb {
 	}
 	
 	public String getMap() {
-		return map.mapa1();
+		return mapLoader.getMap();
 	}
 
 }

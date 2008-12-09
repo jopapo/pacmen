@@ -104,5 +104,9 @@ public class World {
 	public ClassIterator getIterator(Class c) {
 		return new ClassIterator(actorList, c);
 	}
+	
+	public WorldModel getModel() {
+		return this.worldModel;
+	}
 
 }
