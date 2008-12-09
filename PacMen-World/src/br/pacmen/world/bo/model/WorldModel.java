@@ -9,15 +9,19 @@ import br.pacmen.world.bo.err.EPacMenException;
 
 public class WorldModel extends GenericModel {
 
-	private boolean[][] map;  
+	private byte[][] map;  
 
 	public WorldModel(short id, String map, short width, short height) {
 		super(id);
 		this.map = load(map, width, height);
 	}
+	
+	public byte[][] getMap() {
+		return this.map;
+	}
 
-	private boolean[][] load(String map, short width, short height) {
-		boolean[][] arrMap = new boolean[width][height];
+	private byte[][] load(String map, short width, short height) {
+		byte[][] arrMap = new byte[width][height];
 
 		Scanner arquivo = new Scanner(map);
 		String s = "";
@@ -29,17 +33,7 @@ public class WorldModel extends GenericModel {
 					s = arquivo.next();
 					st = new StringTokenizer(s, ",");
 				}
-				int nSprite = Integer.parseInt(st.nextToken());
-				arrMap[x][y] = (nSprite == 1 || nSprite == 6 || nSprite == 4);
-
-				/*if (nSprite == 4) {
-					posCozinha = new Coordinate(x, y);
-				}
-				if (nSprite == 6) {
-					cheatPoints.add(new Coordinate(x, y));
-				}
-				groupTabuleiro.add(sprite);
-				*/
+				arrMap[x][y] = Byte.parseByte(st.nextToken());
 			}
 		}
 		return arrMap;
@@ -57,7 +51,9 @@ public class WorldModel extends GenericModel {
 
 	public boolean canActorMoveTo(Coordinate pos) throws EPacMenException {
 		try { 
-			return map[pos.getX()][pos.getY()];
+			return map[pos.getX()][pos.getY()] == 1 ||
+				map[pos.getX()][pos.getY()] == 4 ||
+				map[pos.getX()][pos.getY()] == 6;
 		} catch (Exception e) {
 			throw new EPacMenException("O tamanho do mapa (" + getHeight() + "/" + getWidth() + ") não possui a posição " + pos.toString());
 		}

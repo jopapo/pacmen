@@ -8,6 +8,7 @@ public class GhostMain {
 	
 	public static void main(String args[]) {
 		try {
+			GhostUtils.startOrbd();
 			GhostUtils.initializeServer(new GhostServerImpl());
 			System.out.println("Encerrando o Servidor.");			
 		} catch (Exception e) {

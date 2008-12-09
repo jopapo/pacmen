@@ -1,6 +1,7 @@
 package br.pacmen.world.main;
 
 import java.awt.Color;
+import java.io.IOException;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -9,6 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import netbula.ORPC.Pmapsvc;
+import netbula.ORPC.rpc_err;
 import br.pacmen.world.ctl.WorldServerThread;
 
 
@@ -313,23 +316,29 @@ public class WorldGUI extends javax.swing.JFrame implements ListSelectionListene
     }// </editor-fold>
 
 	private void jbWorldServerToggleActionPerformed(java.awt.event.ActionEvent evt) {
-		if (server == null) 
-	    	server = new WorldServerThread() {
-	    		public void on() {
-	    			setEnableTabs(true);
-	    			jbWorldServerToggle.setEnabled(false);
-	    			//jbWorldServerToggle.setText("Desativar servidor");
-					jlWorldServerStatus.setText("Servidor ativo");
-					jlWorldServerStatus.setForeground(Color.GREEN);
-	    		}
-	    		public void off(String msg) {
-	    	        setEnableTabs(false);
-	    			jbWorldServerToggle.setEnabled(true);
-					jlWorldServerStatus.setText("Servidor inativo!");
-					if (msg != null)
-						jlWorldServerStatus.setText(jlWorldServerStatus.getText().concat("\n").concat(msg));
-		    	}
-			};
+		if (server == null)
+			try {
+				server = new WorldServerThread() {
+					public void on() {
+						setEnableTabs(true);
+						jbWorldServerToggle.setEnabled(false);
+						//jbWorldServerToggle.setText("Desativar servidor");
+						jlWorldServerStatus.setText("Servidor ativo");
+						jlWorldServerStatus.setForeground(Color.GREEN);
+					}
+					public void off(String msg) {
+				        setEnableTabs(false);
+						jbWorldServerToggle.setEnabled(true);
+						jlWorldServerStatus.setText("Servidor inativo!");
+						if (msg != null)
+							jlWorldServerStatus.setText(jlWorldServerStatus.getText().concat("\n").concat(msg));
+					}
+				};
+			} catch (IOException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Impossível inicializar o mundo.\n\nErro: " + e.getMessage());
+				return;
+			}
 
 		// Inicializa o servidor
 		server.start();
@@ -380,11 +389,26 @@ public class WorldGUI extends javax.swing.JFrame implements ListSelectionListene
     * @param args the command line arguments
     */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
+
+    	// Inicializa o PortMapper por padrão
+    	new Thread() {
+    		public void run() {
+            	System.out.println("Inicializando o PortMapper...");
+            	try {
+        			new Pmapsvc().run();
+        		} catch (rpc_err e) {
+        			e.printStackTrace();
+        		}
+    		}
+    	}.start();
+
+    	// Abre a janela de controle
+    	java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new WorldGUI().setVisible(true);
             }
         });
+    	
     }
 
     // Variables declaration - do not modify

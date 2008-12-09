@@ -1,6 +1,8 @@
 package br.pacmen.ghost.corba.utl;
 
 
+import java.io.IOException;
+
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NameComponent;
@@ -66,6 +68,18 @@ public class GhostUtils {
 
 		// Obtem referencia para o servidor
 		return GhostServerHelper.narrow(ncRef.resolve_str(C_GHOST_SERVICE));
+	}
+
+	public static void startOrbd() {
+		new Thread() {
+			public void run() {
+				try {
+					Runtime.getRuntime().exec("orbd");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
 	}
 
 }

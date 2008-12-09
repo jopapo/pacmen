@@ -1,5 +1,7 @@
 package br.pacmen.world.ctl;
 
+import java.io.IOException;
+
 import netbula.ORPC.rpc_err;
 
 
@@ -7,7 +9,7 @@ public abstract class WorldServerThread extends Thread {
 	
     protected WorldServerImpl serverImpl;
     
-    public WorldServerThread() {
+    public WorldServerThread() throws IOException {
     	serverImpl = new WorldServerImpl();    	
     }
 	
