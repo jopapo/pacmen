@@ -37,7 +37,7 @@ public class GhostServerImpl extends GhostServerPOA {
 
 	private boolean validateWorld() {
 		if (world == null) {
-			System.out.println("World dont exists yet!");
+			System.err.println("World dont exists yet!");
 			return false;
 		}
 		return true;

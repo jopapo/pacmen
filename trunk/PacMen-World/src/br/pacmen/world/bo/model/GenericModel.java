@@ -1,6 +1,6 @@
 package br.pacmen.world.bo.model;
 
-public class GenericModel {
+public abstract class GenericModel {
 	
 	public final static int C_INVALID_ID = -1;
 	
