@@ -7,4 +7,8 @@ public class EPacMenException extends Exception {
 		super(msg);
 	}
 
+	public EPacMenException(String msg, Exception e) {
+		super(msg, e);
+	}
+
 }

@@ -1,11 +1,13 @@
 package br.pacmen.world.ctl;
 
+import java.util.Collection;
 import java.util.Hashtable;
 
 import org.omg.CORBA.ShortHolder;
 
 import br.pacmen.world.bo.Coordinate;
 import br.pacmen.world.bo.GhostVO;
+import br.pacmen.world.bo.PacManVO;
 import br.pacmen.world.bo.err.EPacMenException;
 import br.pacmen.world.bo.model.GenericModel;
 
@@ -70,6 +72,14 @@ public class GhostControl extends Thread {
 			
 		} while (true);
 	}
-
+	
+	public void pacManInfo(PacManVO pac) {
+		for (GhostClientImpl client : ghostServerList.values())
+			client.pacManInfo(pac.getOuid(), pac.getPos().getX(), pac.getPos().getY());
+	}
+	
+	public Collection<GhostVO> getGhosts() {
+		return ghostList.values();
+	}
 
 }
