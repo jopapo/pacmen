@@ -5,12 +5,9 @@ package br.pacmen.world.rpc.comm;
 
 
 
-import netbula.ORPC.ClientGeneric;
-import netbula.ORPC.XDTshort;
-import netbula.ORPC.XDTvoid;
-import netbula.ORPC.rpc_err;
+import netbula.ORPC.*;
 
-public class PacMen_cln extends ClientGeneric implements PacMen {
+public class PacMen_cln extends ClientGeneric implements PacMen{
 
 	/**
 	Construct an RPC client that is not bound to any server

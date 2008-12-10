@@ -64,6 +64,11 @@ public class WorldServerImpl extends PacMen_svcb {
 
 	@Override
 	public st_Status pacManInfo(st_Actor info) {
+		
+		st_Status stat = new st_Status();
+		stat.id = 0;
+		stat.msg = "";
+		
 		Iterator iPacMan = world.getIterator(PacManVO.class);
 		PacManVO pac = null;
 		
@@ -88,7 +93,7 @@ public class WorldServerImpl extends PacMen_svcb {
 			System.err.println(pac.toString() + " não pôde mover-se para " + c.toString());
 		}
 			
-		return null;
+		return stat;
 	}
 
 	@Override

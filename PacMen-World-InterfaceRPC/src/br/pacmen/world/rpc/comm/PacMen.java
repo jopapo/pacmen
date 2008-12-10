@@ -10,18 +10,17 @@ public interface PacMen{
 	public static final int _def_pno = 1;
 	public static final int _def_vno = 1;
 
-	public static final int C_MAX = 1000;
 
 
-	public static final int _worldInfo_proc = 1;
+	public static final int _worldInfo_proc = 10;
 
 	public st_World worldInfo() throws netbula.ORPC.rpc_err;
 
-	public static final int _pacManInfo_proc = 2;
+	public static final int _pacManInfo_proc = 20;
 
 	public st_Status pacManInfo(st_Actor in_arg) throws netbula.ORPC.rpc_err;
 
-	public static final int _ghostInfo_proc = 3;
+	public static final int _ghostInfo_proc = 30;
 
 	public st_ActorAndNext ghostInfo(short in_arg) throws netbula.ORPC.rpc_err;
 

@@ -5,12 +5,7 @@ package br.pacmen.world.rpc.comm;
 
 
 
-import netbula.ORPC.Svc;
-import netbula.ORPC.XDR;
-import netbula.ORPC.XDRError;
-import netbula.ORPC.XDT;
-import netbula.ORPC.XDTshort;
-import netbula.ORPC.XDTvoid;
+import netbula.ORPC.*;
 
 abstract public class PacMen_svcb extends Svc implements PacMen {
 
@@ -32,32 +27,32 @@ abstract public class PacMen_svcb extends Svc implements PacMen {
 		switch(proc) {
 		case 0: return new XDTvoid();
 
-		case 1:
-		st_World _out_arg1;
-		_out_arg1 = this.worldInfo();
-		return _out_arg1;
+		case 10:
+		st_World _out_arg10;
+		_out_arg10 = this.worldInfo();
+		return _out_arg10;
 
-		case 2:
-		st_Status _out_arg2;
+		case 20:
+		st_Status _out_arg20;
 		try {
 			st_Actor _in_arg = new st_Actor();
 			_in_arg.xdr(inXDR);
-			_out_arg2 = this.pacManInfo(_in_arg);
+			_out_arg20 = this.pacManInfo(_in_arg);
 		} catch (XDRError e) {
 			throw e;
 		}
-		return _out_arg2;
+		return _out_arg20;
 
-		case 3:
-		st_ActorAndNext _out_arg3;
+		case 30:
+		st_ActorAndNext _out_arg30;
 		try {
 			XDTshort _in_arg = new XDTshort();
 			_in_arg.xdr(inXDR);
-			_out_arg3 = this.ghostInfo(_in_arg.value);
+			_out_arg30 = this.ghostInfo(_in_arg.value);
 		} catch (XDRError e) {
 			throw e;
 		}
-		return _out_arg3;
+		return _out_arg30;
 
 		default: return null;
 		}
