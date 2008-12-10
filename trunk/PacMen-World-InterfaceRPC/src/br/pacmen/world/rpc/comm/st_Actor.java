@@ -5,9 +5,7 @@ package br.pacmen.world.rpc.comm;
 
 
 
-import netbula.ORPC.XDR;
-import netbula.ORPC.XDRError;
-import netbula.ORPC.XDT;
+import netbula.ORPC.*;
 
 public class st_Actor implements XDT{
 	public short id;

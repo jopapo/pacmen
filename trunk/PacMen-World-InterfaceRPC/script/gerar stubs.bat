@@ -5,7 +5,7 @@ cd "C:\arquivo\furb\materias\2008-2\sd\trab-final\PacMen\PacMen-World-InterfaceR
 echo Excluindo stubs antigos...
 del *.java /Q
 echo Gerando novos stubs...
-"C:\arquivo\furb\materias\2008-2\sd\trab-final\PacMen\PacMen-World-InterfaceRPC\script\jrpcgen" ..\PacMen.x
+"C:\arquivo\furb\materias\2008-2\sd\trab-final\PacMen\PacMen-World-InterfaceRPC\script\jrpcgen" ..\..\..\..\..\PacMen.x
 
 echo Concluido!
 pause
